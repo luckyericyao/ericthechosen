@@ -1,5 +1,9 @@
 export type PrivateDoorContent = {
   enabled: boolean;
+  entryLabel: string;
+  backLabel: string;
+  emptyEyebrow: string;
+  emptyBody: string;
   eyebrow: string;
   title: string;
   body: string;
@@ -14,6 +18,10 @@ export type PrivateDoorContent = {
  */
 export const privateDoorContent: PrivateDoorContent = {
   enabled: false,
+  entryLabel: "A SMALL DOOR",
+  backLabel: "BACK TO THE FILM",
+  emptyEyebrow: "THE DOOR IS NOT OPEN",
+  emptyBody: "There is nothing here yet.",
   eyebrow: "",
   title: "",
   body: "",

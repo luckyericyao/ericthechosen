@@ -16,6 +16,14 @@ export type SiteContent = {
     description: string;
     ogImage: string;
   };
+  labels: {
+    documentType: string;
+    sectionTotal: string;
+    heroSideNotes: [string, string];
+    motionCaptions: [string, string, string];
+    returnsEyebrow: string;
+    closingEyebrow: string;
+  };
   nav: NavItem[];
   hero: {
     image: ImageAsset;
@@ -67,6 +75,14 @@ export const siteContent: SiteContent = {
     title: "Eric Yao — A life, in progress.",
     description: "有些事，慢一点才看得清。",
     ogImage: "https://images.unsplash.com/photo-1518005020951-eccb494ad742?auto=format&fit=crop&w=1600&q=85",
+  },
+  labels: {
+    documentType: "PRIVATE DOCUMENTARY",
+    sectionTotal: "06",
+    heroSideNotes: ["PRIVATE / 01", "SHADOWS & LIGHT"],
+    motionCaptions: ["A TABLE BEFORE THE ROOM FILLS", "BETWEEN DEPARTURE & ARRIVAL", "NOT FINISHED THE FIRST TIME"],
+    returnsEyebrow: "03 / THE PERSONAL INDEX",
+    closingEyebrow: "06 / THE LAST FRAME",
   },
   nav: [
     { label: "Eric Yao", href: "#top" },

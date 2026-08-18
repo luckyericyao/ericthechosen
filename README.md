@@ -56,7 +56,7 @@ pnpm preview
 
 默认 `/for-you` 没有内容，首页也不会显示入口。若要启用：
 
-1. 在 `src/content/privateDoor.ts` 中填入内容并将 `enabled` 改为 `true`。
+1. 在 `src/content/privateDoor.ts` 中填入内容并将 `enabled` 改为 `true`；首页只会出现一个低调的 `entryLabel` 小入口。
 2. 若需要音频，将文件放入 `public/audio/`，填入 `audioSrc: "/audio/your-note.mp3"`。
 3. 重新构建并部署。
 

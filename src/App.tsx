@@ -106,6 +106,22 @@ function SiteHeader({ activeSection }: { activeSection: string }) {
 
   const closeMenu = () => setMenuOpen(false);
 
+  useEffect(() => {
+    const handleEscape = (event: KeyboardEvent) => {
+      if (event.key === "Escape") closeMenu();
+    };
+    window.addEventListener("keydown", handleEscape);
+    return () => window.removeEventListener("keydown", handleEscape);
+  }, []);
+
+  useEffect(() => {
+    const previousOverflow = document.body.style.overflow;
+    if (menuOpen) document.body.style.overflow = "hidden";
+    return () => {
+      document.body.style.overflow = previousOverflow;
+    };
+  }, [menuOpen]);
+
   return (
     <header className={`site-header ${menuOpen ? "is-open" : ""}`}>
       <a className="brand-mark" href="#top" onClick={closeMenu} aria-label="回到首页">
@@ -121,14 +137,14 @@ function SiteHeader({ activeSection }: { activeSection: string }) {
       <div className="header-meta">
         <span className="header-meta__current">{activeSection === "top" ? "00" : activeSection === "motion" ? "01" : activeSection === "elsewhere" ? "02" : activeSection === "convictions" ? "04" : "05"}</span>
         <span className="header-meta__slash">/</span>
-        <span>06</span>
+        <span>{siteContent.labels.sectionTotal}</span>
       </div>
       <button className="menu-trigger" type="button" aria-expanded={menuOpen} aria-controls="mobile-navigation" onClick={() => setMenuOpen((open) => !open)}>
         <MenuIcon open={menuOpen} />
         <span className="sr-only">{menuOpen ? "关闭导航" : "打开导航"}</span>
       </button>
       <div id="mobile-navigation" className="mobile-nav" aria-hidden={!menuOpen}>
-        <div className="mobile-nav__topline">PRIVATE DOCUMENTARY <span>01 — 06</span></div>
+        <div className="mobile-nav__topline">{siteContent.labels.documentType} <span>01 — {siteContent.labels.sectionTotal}</span></div>
         <nav aria-label="移动端主导航">
           {siteContent.nav.map((item, index) => (
             <a key={item.href} href={item.href} onClick={closeMenu}>
@@ -146,6 +162,7 @@ function SiteHeader({ activeSection }: { activeSection: string }) {
 
 function Hero() {
   const { hero } = siteContent;
+  const hasPrivateDoor = privateDoorContent.enabled && privateDoorContent.body.trim().length > 0;
   return (
     <section id="top" className="hero" aria-labelledby="hero-title">
       <div className="hero__image-wrap">
@@ -165,9 +182,15 @@ function Hero() {
         </div>
       </div>
       <div className="hero__side-note" aria-hidden="true">
-        <span>PRIVATE / 01</span>
-        <span>SHADOWS &amp; LIGHT</span>
+        <span>{siteContent.labels.heroSideNotes[0]}</span>
+        <span>{siteContent.labels.heroSideNotes[1]}</span>
       </div>
+      {hasPrivateDoor && (
+        <a className="hero__private-link" href="/for-you" aria-label={privateDoorContent.entryLabel}>
+          <span className="hero__private-dot" aria-hidden="true" />
+          <span>{privateDoorContent.entryLabel}</span>
+        </a>
+      )}
     </section>
   );
 }
@@ -185,7 +208,7 @@ function MotionSection() {
         <div className="motion__layout">
           <Reveal className="motion__lead-image image-frame image-frame--tall">
             <AssetImage asset={motion.images[0]} />
-            <span className="image-caption">A TABLE BEFORE THE ROOM FILLS</span>
+            <span className="image-caption">{siteContent.labels.motionCaptions[0]}</span>
           </Reveal>
           <div className="motion__notes">
             {motion.fragments.map((fragment, index) => (
@@ -202,11 +225,11 @@ function MotionSection() {
         <div className="motion__bottom-grid">
           <Reveal className="image-frame image-frame--wide">
             <AssetImage asset={motion.images[1]} />
-            <span className="image-caption">BETWEEN DEPARTURE &amp; ARRIVAL</span>
+            <span className="image-caption">{siteContent.labels.motionCaptions[1]}</span>
           </Reveal>
           <Reveal className="image-frame image-frame--paper">
             <AssetImage asset={motion.images[2]} />
-            <span className="image-caption">NOT FINISHED THE FIRST TIME</span>
+            <span className="image-caption">{siteContent.labels.motionCaptions[2]}</span>
           </Reveal>
         </div>
       </div>
@@ -247,7 +270,7 @@ function ReturnsSection() {
       <div className="page-gutter">
         <div className="returns__heading">
           <div>
-            <p className="eyebrow">03 / THE PERSONAL INDEX</p>
+            <p className="eyebrow">{siteContent.labels.returnsEyebrow}</p>
             <h2 id="returns-title">{returns.title}</h2>
           </div>
           <p>{returns.intro}</p>
@@ -361,7 +384,7 @@ function Closing() {
     <footer className="closing section-dark" aria-labelledby="closing-title">
       <div className="page-gutter">
         <div className="closing__rule" aria-hidden="true" />
-        <p className="eyebrow">06 / THE LAST FRAME</p>
+        <p className="eyebrow">{siteContent.labels.closingEyebrow}</p>
         <h2 id="closing-title">
           {closing.title.split("\n").map((line, index) => (
             <span key={line}>
@@ -385,7 +408,7 @@ function PrivateDoor() {
   return (
     <main className="private-page">
       <div className="page-gutter">
-        <a href="/" className="private-page__back"><ArrowIcon direction="down" /> BACK TO THE FILM</a>
+        <a href="/" className="private-page__back"><ArrowIcon direction="down" /> {content.backLabel}</a>
         {content.enabled && content.body ? (
           <article className="private-note">
             <p className="eyebrow">{content.eyebrow}</p>
@@ -396,8 +419,8 @@ function PrivateDoor() {
           </article>
         ) : (
           <div className="private-empty">
-            <span>THE DOOR IS NOT OPEN</span>
-            <p>There is nothing here yet.</p>
+            <span>{content.emptyEyebrow}</span>
+            <p>{content.emptyBody}</p>
           </div>
         )}
       </div>
